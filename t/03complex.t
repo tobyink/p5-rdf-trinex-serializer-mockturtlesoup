@@ -22,7 +22,7 @@ the same terms as the Perl 5 programming language system itself.
 
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More;
 
 use JSON qw( to_json -convert_blessed_universally );
 use RDF::Trine;
@@ -32,6 +32,11 @@ require RDF::Trine::Model;
 require RDF::Trine::Parser::Turtle;
 require RDF::Trine::Serializer::Turtle;
 require RDF::TrineX::Serializer::MockTurtleSoup;
+
+require RDF::Prefixes;
+plan "RDF::Prefixes"->VERSION eq "0.003"
+	? (tests => 3)
+	: (skip_all => "tests designed for RDF::Prefixes 0.003");
 
 sub check
 {
