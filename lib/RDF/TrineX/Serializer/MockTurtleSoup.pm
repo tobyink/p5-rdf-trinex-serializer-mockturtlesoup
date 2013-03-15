@@ -12,8 +12,9 @@ BEGIN {
 
 use Carp;
 use Sort::Key;
-use RDF::Prefixes;
+use RDF::Trine;
 use RDF::Trine::Namespace qw( rdf rdfs );
+use RDF::Prefixes;
 
 use base 'RDF::Trine::Serializer';
 
@@ -143,7 +144,8 @@ sub _serialize_bunch
 	}
 	elsif ($bunch->{subject}->is_blank
 	and $bunch->{inline}
-	and !$bunch->{inlist})
+	and !$bunch->{inlist}
+	and !$self->{model}->count_statements(undef, undef, $bunch->{subject}))
 	{
 		$str .= "$indent\[]\n";
 	}
@@ -409,9 +411,8 @@ will just be output as URIs.
 
 =item C<colspace>
 
-If you set this to about 20 or so, you'll see your predicate-object
-pairs line up as nice columns. The smaller the number, the closer they
-get. Default is 0.
+This allows your predicate-object pairs to line up as nice columns. The
+smaller the number, the closer they get. Default is 20.
 
 =item C<indent>
 
