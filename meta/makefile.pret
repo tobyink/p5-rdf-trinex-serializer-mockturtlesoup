@@ -4,9 +4,9 @@
 	perl_version_from m`RDF::TrineX::Serializer::MockTurtleSoup`;
 	version_from      m`RDF::TrineX::Serializer::MockTurtleSoup`;
 	readme_from       m`RDF::TrineX::Serializer::MockTurtleSoup` ;
-	requires          p`RDF::Prefixes 0`;
+	requires          p`RDF::Prefixes 0.003`;
 	requires          p`RDF::Trine 1.000`;
 	requires          p`Sort::Key 0`;
-	test_requires     p`JSON 0`;
+	test_requires     p`JSON 2.00`;
 	.
 
