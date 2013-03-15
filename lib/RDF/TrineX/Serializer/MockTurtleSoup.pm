@@ -1,6 +1,6 @@
 package RDF::TrineX::Serializer::MockTurtleSoup;
 
-use 5.010;
+use 5.010001;
 use strict;
 use warnings;
 use utf8;
@@ -16,7 +16,7 @@ use RDF::Trine;
 use RDF::Trine::Namespace qw( rdf rdfs );
 use RDF::Prefixes;
 
-use base 'RDF::Trine::Serializer';
+use parent 'RDF::Trine::Serializer';
 
 sub new
 {
