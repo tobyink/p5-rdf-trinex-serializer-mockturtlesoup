@@ -62,7 +62,7 @@ sub check
 		my $g1 = "RDF::Trine::Graph"->new($input);
 		my $g2 = "RDF::Trine::Graph"->new($model);
 		ok($g1->equals($g2), "graphs are isomorphic");
-	};	
+	};
 }
 
 my $model = "RDF::Trine::Model"->new;

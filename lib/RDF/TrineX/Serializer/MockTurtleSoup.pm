@@ -461,6 +461,10 @@ If true, will output data like:
 
 =back
 
+=head2 Methods
+
+This module provides the same API as L<RDF::Trine::Serializer>.
+
 =head1 BUGS
 
 Please report any bugs to
