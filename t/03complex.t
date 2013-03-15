@@ -86,3 +86,5 @@ _:quux <xyzzy> _:baz .
 <baz> a _:monkey, _:puzzle .
 
 _:puzzle a <foo>.
+
+_:cyclic <cycle> _:cyclic ; <branch> _:branch .
