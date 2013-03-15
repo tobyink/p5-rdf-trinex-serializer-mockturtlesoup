@@ -1,0 +1,8 @@
+# This file provides instructions for packaging.
+
+`RDF-TrineX-Serializer-MockTurtleSoup`
+	perl_version_from m`RDF::TrineX::Serializer::MockTurtleSoup`;
+	version_from      m`RDF::TrineX::Serializer::MockTurtleSoup`;
+	readme_from       m`RDF::TrineX::Serializer::MockTurtleSoup` ;
+	.
+
