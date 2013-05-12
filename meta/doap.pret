@@ -8,7 +8,7 @@
 	:homepage             <https://metacpan.org/release/RDF-TrineX-Serializer-MockTurtleSoup>;
 	:download-page        <https://metacpan.org/release/RDF-TrineX-Serializer-MockTurtleSoup>;
 	:bug-database         <http://rt.cpan.org/Dist/Display.html?Queue=RDF-TrineX-Serializer-MockTurtleSoup>;
-	:repository           [ a :HgRepository; :browse <https://bitbucket.org/tobyink/p5-rdf-trinex-serializer-mockturtlesoup> ];
+	:repository           [ a :GitRepository; :browse <https://github.com/tobyink/p5-rdf-trinex-serializer-mockturtlesoup> ];
 	:created              2013-03-15;
 	:license              <http://dev.perl.org/licenses/>;
 	:maintainer           cpan:TOBYINK;
