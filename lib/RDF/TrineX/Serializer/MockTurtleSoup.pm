@@ -31,8 +31,13 @@ sub new
 	$self->{colspace}   //= 20;
 	$self->{indent}     ||= "\t";
 	$self->{repeats}    //= 0;
+	$self->{encoding}   ||= "utf8";
+	$self->{apostrophe} //= 0;
 	
-	croak("Bad indent!") unless $self->{indent} =~ /^\s+$/;
+	croak("Bad indent")
+		unless $self->{indent} =~ /^\s+$/;
+	croak("Bad encoding: expected 'utf8' or 'ascii'")
+		unless $self->{encoding} =~ /^(ascii|utf8)$/;
 	
 	return $self;
 }
@@ -100,9 +105,16 @@ sub _node
 		}
 		elsif (defined $dt)
 		{
-			my $n2 = RDF::Trine::Node::Literal->new($n->literal_value);
-			return sprintf('%s^^%s', $n2->as_ntriples, $dt);
+			return sprintf('%s^^%s', $self->_escaped_quoted_string($n->literal_value), $dt);
 		}
+	}
+	elsif ($n->is_literal and $n->has_language)
+	{
+		return sprintf('%s@%s', $self->_escaped_quoted_string($n->literal_value), $n->literal_value_language);
+	}
+	elsif ($n->is_literal)
+	{
+		return $self->_escaped_quoted_string($n->literal_value);
 	}
 	
 	if ($n->is_blank)
@@ -111,6 +123,47 @@ sub _node
 	}
 	
 	return $n->as_ntriples;
+}
+
+{
+	my %ESCAPE = (
+		"\t"     => "\\t",
+		"\r"     => "\\r",
+		"\n"     => "\\n",
+		"\""     => "\\\"",
+		"\'"     => "\\\'",
+		"\\"     => "\\\\",
+	);
+	
+	sub _escaped_quoted_string
+	{
+		my $self = shift;
+		my ($str) = @_;
+		
+		my $quote = '"';
+		my $chars = '\x00-\x1F\x5C';
+		
+		if ($self->{apostrophe} and $str =~ /\"/ and not $str =~ /\'/)
+		{
+			$quote = "'";
+		}
+		else
+		{
+			$chars .= '\x22'
+		}
+		
+		if ($self->{encoding} eq "ascii")
+		{
+			$chars .= '\x{0080}-\x{10FFFF}';
+		}
+		
+		$str =~ s{([$chars])}{
+			exists($ESCAPE{$1}) ? $ESCAPE{$1} :
+			ord($1) <= 0xFFFF   ? sprintf('\u%04X', ord($1)) : sprintf('\U%08X', ord($1))
+		}xeg;
+		
+		"$quote$str$quote";
+	}
 }
 
 sub _serialize_bunch
@@ -333,7 +386,9 @@ RDF::TrineX::Serializer::MockTurtleSoup - he's a bit slow, but he's sure good lo
 
 =head1 SYNOPSIS
 
- my $ser = RDF::TrineX::Serializer::MockTurtleSoup->new(%opts);
+ use RDF::TrineX::Serializer::MockTurtleSoup;
+ 
+ my $ser = "RDF::TrineX::Serializer::MockTurtleSoup"->new(%opts);
  $ser->serialize_model_to_file($fh, $model);
 
 =head1 DESCRIPTION
@@ -360,7 +415,7 @@ Use QNames for predicates, classes and datatypes, use full URIs
 elsewhere. But also allow the user to supply a list of additional
 URIs that will be abbreviated to QNames:
 
- RDF::Trine::Serializer::MockTurtleSoup->new(
+ "RDF::TrineX::Serializer::MockTurtleSoup"->new(
     abbreviate => [
        qr{^http://ontologi\.es/},
        qr{^http://purl\.org/},
@@ -409,10 +464,21 @@ URIs used as predicates or as the object of rdf:type triples are always
 abbreviated anyway. URIs which cannot be abbreviated to a legal QName
 will just be output as URIs.
 
+=item C<apostrophe>
+
+Boolean; if true, then the serializer will sometimes quote literals with
+an apostrophe instead of double-quote marks. This is allowed by recent
+versions of the Turtle spec, but was disallowed by earlier specifications,
+and not widely supported yet. Defaults to false.
+
 =item C<colspace>
 
 This allows your predicate-object pairs to line up as nice columns. The
 smaller the number, the closer they get. Default is 20.
+
+=item C<encoding>
+
+Either "ascii" or "utf8". Default is "utf8".
 
 =item C<indent>
 

@@ -25,10 +25,19 @@ the same terms as the Perl 5 programming language system itself.
 
 use strict;
 use warnings;
+use utf8;
 use Test::More;
 
+BEGIN {
+	*is_string = eval { require Test::LongString }
+		? \&Test::LongString::is_string
+		: \&Test::More::is;
+};
+
+use Encode qw( encode decode );
 use JSON qw( to_json -convert_blessed_universally );
 use RDF::Trine;
+use Unicode::Normalize qw( NFD );
 
 require RDF::Trine::Graph;
 require RDF::Trine::Model;
@@ -55,7 +64,11 @@ sub check
 		my $mts = "RDF::TrineX::Serializer::MockTurtleSoup"->new(%$opts, priorities => $prio);
 		my $got = $mts->serialize_model_to_string($input);
 		
-		is($got, $expected, "serialized string matches") if $do_str_test;
+		is_string(
+			NFD(decode("utf8", $got)),
+			NFD($expected),
+			"serialized string matches",
+		) if $do_str_test;
 		
 		my $model = "RDF::Trine::Model"->new;
 		"RDF::Trine::Parser::Turtle"->new->parse_into_model(
@@ -97,7 +110,10 @@ check($model, { str_test => 1, indent => "   " }, <<'OUTPUT');
    doap:maintainer      <http://purl.org/NET/cpan-uri/person/tobyink>;
    doap:name            "RDF-TrineX-Serializer-MockTurtleSoup";
    doap:programming-language "Perl";
-   doap:shortdesc       "he's a bit slow, but he's sure good lookin'".
+   doap:shortdesc       "he's a bit slow, but he's sure good lookin'";
+   doap:xxx1            "foo\"bar";
+   doap:xxx2            "foo'bar";
+   doap:xxx3            "café".
 
 <http://purl.org/NET/cpan-uri/person/tobyink>
    a                    foaf:Person;
@@ -112,6 +128,7 @@ check($model, {
 	colspace   => 0,
 	abbreviate => qr(cpan-uri),
 	labelling  => qr((?:title|name)$),
+	encoding   => "ascii",
 	namespaces => { prj => 'http://purl.org/NET/cpan-uri/dist/RDF-TrineX-Serializer-MockTurtleSoup/' }
 }, <<'OUTPUT');
 @prefix dc:    <http://purl.org/dc/terms/> .
@@ -135,7 +152,10 @@ prj:project
 	doap:license <http://dev.perl.org/licenses/>;
 	doap:maintainer person:tobyink;
 	doap:programming-language "Perl";
-	doap:shortdesc "he's a bit slow, but he's sure good lookin'".
+	doap:shortdesc "he's a bit slow, but he's sure good lookin'";
+	doap:xxx1 "foo\"bar";
+	doap:xxx2 "foo'bar";
+	doap:xxx3 "caf\u00E9".
 
 person:tobyink
 	a foaf:Person;
@@ -175,7 +195,10 @@ check($model, {
    doap:maintainer      <http://purl.org/NET/cpan-uri/person/tobyink>;
    doap:name            "RDF-TrineX-Serializer-MockTurtleSoup";
    doap:programming-language "Perl";
-   doap:shortdesc       "he's a bit slow, but he's sure good lookin'".
+   doap:shortdesc       "he's a bit slow, but he's sure good lookin'";
+   doap:xxx1            "foo\"bar";
+   doap:xxx2            "foo'bar";
+   doap:xxx3            "café".
 
 OUTPUT
 
@@ -192,6 +215,9 @@ __DATA__
 	<http://usefulinc.com/ns/doap#name> "RDF-TrineX-Serializer-MockTurtleSoup" ;
 	<http://usefulinc.com/ns/doap#programming-language> "Perl" ;
 	<http://usefulinc.com/ns/doap#shortdesc> "he's a bit slow, but he's sure good lookin'" ;
+	<http://usefulinc.com/ns/doap#xxx1> "foo\"bar" ;
+	<http://usefulinc.com/ns/doap#xxx2> "foo'bar" ;
+	<http://usefulinc.com/ns/doap#xxx3> "caf\u00e9" ;
 	a <http://usefulinc.com/ns/doap#Project> .
 <http://purl.org/NET/cpan-uri/person/tobyink> a <http://xmlns.com/foaf/0.1/Person> ;
 	<http://xmlns.com/foaf/0.1/nick> "TOBYINK" ;
