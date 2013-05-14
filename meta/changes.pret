@@ -4,3 +4,12 @@
 	issued  2013-03-15;
 	label   "Initial release".
 
+`RDF-TrineX-Serializer-MockTurtleSoup 0.002 cpan:TOBYINK`
+	issued  2013-05-14;
+	changeset [
+		item "'encoding' option."^^Addition;
+		item "'apostrophe' option."^^Addition;
+		item "Nicer output of literals."^^Change;
+		item "Minor fixes/improvements."^^Documentation;
+	].
+
