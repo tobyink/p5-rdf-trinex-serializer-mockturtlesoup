@@ -73,7 +73,7 @@ sub check
 		my $model = "RDF::Trine::Model"->new;
 		"RDF::Trine::Parser::Turtle"->new->parse_into_model(
 			"http://localhost/",
-			$got,
+			RDF::Trine->VERSION ge "1.004" ? decode("utf8", $got) : $got,
 			$model,
 		);
 		
