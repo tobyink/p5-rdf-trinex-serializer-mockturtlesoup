@@ -38,6 +38,7 @@ use Encode qw( encode decode );
 use JSON qw( to_json -convert_blessed_universally );
 use RDF::Trine;
 use Unicode::Normalize qw( NFD );
+use match::smart qw(match);
 
 require RDF::Trine::Graph;
 require RDF::Trine::Model;
@@ -46,9 +47,9 @@ require RDF::Trine::Serializer::Turtle;
 require RDF::TrineX::Serializer::MockTurtleSoup;
 
 require RDF::Prefixes;
-plan "RDF::Prefixes"->VERSION eq "0.003"
+plan match("RDF::Prefixes"->VERSION, [qw(0.003 0.004)])
 	? (tests => 3)
-	: (skip_all => "tests designed for RDF::Prefixes 0.003");
+	: (skip_all => "tests designed for RDF::Prefixes 0.003/0.004");
 
 sub check
 {
