@@ -25,3 +25,13 @@
 		item "Update test cases for RDF::Prefixes 0.004."^^Update;
 		item "Drop usage of smartmatch operator."^^Update;
 	].
+
+`RDF-TrineX-Serializer-MockTurtleSoup 0.005 cpan:TOBYINK`
+	issued  2013-07-02;
+	changeset [
+		item [
+			a dcs:Packaging, dcs:Bugfix;
+			label "Fix dependencies.";
+			dcs:thanks cpan:JONASS;
+		]
+	].
