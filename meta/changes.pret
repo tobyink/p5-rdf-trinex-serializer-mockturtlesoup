@@ -18,3 +18,10 @@
 	changeset [
 		item "Fix t/02ser.t test case in RDF::Trine 1.004+, where parsers expect chars (not bytes)."^^Bugfix;
 	].
+
+`RDF-TrineX-Serializer-MockTurtleSoup 0.004 cpan:TOBYINK`
+	issued  2013-07-02;
+	changeset [
+		item "Update test cases for RDF::Prefixes 0.004."^^Update;
+		item "Drop usage of smartmatch operator."^^Update;
+	].
