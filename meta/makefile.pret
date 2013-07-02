@@ -7,6 +7,7 @@
 	requires          p`RDF::Prefixes 0.003`;
 	requires          p`RDF::Trine 1.000`;
 	requires          p`Sort::Key 0`;
+	requires          p`match::smart`;
 	test_requires     p`JSON 2.00`;
 	.
 
