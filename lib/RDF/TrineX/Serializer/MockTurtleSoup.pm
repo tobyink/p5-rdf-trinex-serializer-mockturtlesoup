@@ -7,7 +7,7 @@ use utf8;
 
 BEGIN {
 	$RDF::TrineX::Serializer::MockTurtleSoup::AUTHORITY = 'cpan:TOBYINK';
-	$RDF::TrineX::Serializer::MockTurtleSoup::VERSION   = '0.005';
+	$RDF::TrineX::Serializer::MockTurtleSoup::VERSION   = '0.006';
 }
 
 use Carp;
